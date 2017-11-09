@@ -93,6 +93,7 @@ Contents
 .. toctree::
 
    multidict
+   changes
 
 Indices and tables
 ==================
