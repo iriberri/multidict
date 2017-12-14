@@ -55,7 +55,7 @@ _helpers:
 - &osx_python_base
   stage: &stage_test_osx_name test under OS X (last chance to fail before deploy available)
   os: osx
-  type IN (api, cron) OR tag IS present
+  if: type IN (api, cron) OR tag IS present
   language: generic
   python: &pypy3 pypy3.5-5.8.0
   env:
@@ -81,7 +81,7 @@ _helpers:
   - brew --cache
 - &generic_deploy_base
   stage: &deploy_stage_name deploy (PYPI upload itself runs only for tagged commits)
-  type IN (api, cron) OR tag IS present
+  if: type IN (api, cron) OR tag IS present
   <<: *_mainstream_python_base
   deploy: &deploy_step
     provider: pypi
