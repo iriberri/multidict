@@ -3,133 +3,18 @@ sudo: false
 language: python
 
 _helpers:
-- &_mainstream_python_base
-  python: *mainstream_python
 - &osx_python_base
   stage: &stage_test_osx_name test under OS X (last chance to fail before deploy available)
   os: osx
   language: generic
-- &generic_deploy_base
-  stage: &deploy_stage_name deploy (PYPI upload itself runs only for tagged commits)
-  <<: *_mainstream_python_base
-- &osx_pypi_deploy_base_1011
-  <<: *osx_python_base
-  <<: *generic_deploy_base
-  osx_image: xcode7.3
-  script: skip
-- &osx_pypi_deploy_base_1012
-  <<: *osx_pypi_deploy_base_1011
-  osx_image: xcode8.1
-- &osx_pypi_deploy_base_1010
-  <<: *osx_pypi_deploy_base_1011
-  osx_image: xcode6.4
+
 
 jobs:
   include:
-  - python: *pypy3
-    env:
-    - MULTIDICT_NO_EXTENSIONS=X
-
   - <<: *osx_python_base
     python: 3.4
-    env:
-    - &env_py34 PYTHON_VERSION=3.4.6
-    - *env_pyenv
-    - *env_path
-  - <<: *osx_python_base
-    python: 3.5
-    env:
-    - &env_py35 PYTHON_VERSION=3.5.3
-    - *env_pyenv
-    - *env_path
-  - <<: *osx_python_base
-    python: *mainstream_python
-    env:
-    - *env_py36
-    - *env_pyenv
-    - *env_path
-  - <<: *osx_python_base
-    python: nightly
-    env:
-    - PYTHON_VERSION=3.7-dev
-    - *env_pyenv
-    - *env_path
-  # pypy3.5-5.8.0 fails under OS X because it's unsupported
-
-
-  - <<: *osx_pypi_deploy_base_1010
-    python: 3.4
-    env:
-    - *env_os1010_msg
-    - *env_py34
-    - *env_pyenv
-    - *env_path
-    # OS X 10.10, Python 3.5
-  - <<: *osx_pypi_deploy_base_1010
-    python: 3.5
-    env:
-    - *env_os1010_msg
-    - *env_py35
-    - *env_pyenv
-    - *env_path
-    # OS X 10.10, Python 3.6
-  - <<: *osx_pypi_deploy_base_1010
-    env:
-    - *env_os1010_msg
-    - *env_py36
-    - *env_pyenv
-    - *env_path
-    # OS X 10.11, Python 3.4
-  - <<: *osx_pypi_deploy_base_1011
-    python: 3.4
-    env:
-    - *env_os1011_msg
-    - *env_py34
-    - *env_pyenv
-    - *env_path
-    # OS X 10.11, Python 3.5
-  - <<: *osx_pypi_deploy_base_1011
-    python: 3.5
-    env:
-    - *env_os1011_msg
-    - *env_py35
-    - *env_pyenv
-    - *env_path
-    # OS X 10.11, Python 3.6
-  - <<: *osx_pypi_deploy_base_1011
-    env:
-    - *env_os1011_msg
-    - *env_py36
-    - *env_pyenv
-    - *env_path
-    # OS X 10.12, Python 3.4
-  - <<: *osx_pypi_deploy_base_1012
-    python: 3.4
-    env:
-    - *env_os1012_msg
-    - *env_py34
-    - *env_pyenv
-    - *env_path
-    # OS X 10.12, Python 3.5
-  - <<: *osx_pypi_deploy_base_1012
-    python: 3.5
-    env:
-    - *env_os1012_msg
-    - *env_py35
-    - *env_pyenv
-    - *env_path
-    # OS X 10.12, Python 3.6
-  - <<: *osx_pypi_deploy_base_1012
-    env:
-    - *env_os1012_msg
-    - *env_py36
-    - *env_pyenv
-    - *env_path
 
 stages:
 - name: *stage_test_osx_name
   if: type IN (api, cron) OR tag IS present
-- name: *deploy_stage_name
-  # This will prevent deploy unless it's a tagged commit:
-  if: tag IS present
 
